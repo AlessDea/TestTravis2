@@ -3,22 +3,28 @@
               Any modifications will be overwritten.
               To include a user specific buildfile here, simply create one in the same
               directory with the processing instruction <?eclipse.ant.import?>
-              as the first entry and export the buildfile again. --><project basedir="." default="build" name="HelloWorld">
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="databaseInteraction">
     <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="../../../eclipse/java-2019-092/Eclipse.app/Contents/Eclipse/"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="9"/>
     <property name="source" value="9"/>
-    <path id="HelloWorld.classpath">
+    <path id="databaseInteraction.classpath">
         <pathelement location="bin"/>
+        <pathelement location="src/mysql-connector-java-8.0.18.jar"/>
     </path>
-    <path id="run.HelloWorld.classpath">
-        <path refid="HelloWorld.classpath"/>
+    <path id="run.MySql.classpath">
+        <path refid="databaseInteraction.classpath"/>
+        <pathelement location="src/mysql-connector-java-8.0.18.jar"/>
+    </path>
+    <path id="run.UserDao.classpath">
+        <path refid="databaseInteraction.classpath"/>
+        <pathelement location="src/mysql-connector-java-8.0.18.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
         <copy includeemptydirs="false" todir="bin">
             <fileset dir="src">
-                <exclude name="**/*.launch"/>
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
@@ -33,7 +39,7 @@
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
             <src path="src"/>
-            <classpath refid="HelloWorld.classpath"/>
+            <classpath refid="databaseInteraction.classpath"/>
         </javac>
     </target>
     <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
@@ -50,9 +56,14 @@
         <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
         <antcall target="build"/>
     </target>
-    <target name="HelloWorld">
-        <java classname="HelloWorld" failonerror="true" fork="yes">
-            <classpath refid="run.HelloWorld.classpath"/>
+    <target name="MySql">
+        <java classname="exceptions.MySql" failonerror="true" fork="yes">
+            <classpath refid="run.MySql.classpath"/>
+        </java>
+    </target>
+    <target name="UserDao">
+        <java classname="dao.UserDao" failonerror="true" fork="yes">
+            <classpath refid="run.UserDao.classpath"/>
         </java>
     </target>
 </project>
